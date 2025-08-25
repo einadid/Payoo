@@ -3,24 +3,354 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Demo</title>
-    <!-- daisyUI -->
-    <link href="https://cdn.jsdelivr.net/npm/daisyui@5" rel="stylesheet" type="text/css" />
-    <!-- Tailwind -->
-    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <title>Payooo - Financial App</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Custom Font and Icons (Optional but recommended for better look) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            -webkit-tap-highlight-color: transparent; /* Prevents flash on mobile tap */
+        }
+        /* Simple transition for smoother UI changes */
+        .form-section {
+            transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+        }
+    </style>
 </head>
-<body>
-     <div> 
-        <button id="logout-btn" class="btn btn-info btn-outline border-gray-300 rounded-[8px]">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-box-arrow-left" viewBox="0 0 16 16">
-                <path fill-rule="evenodd" d="M6 12.5a.5.5 0 0 0 .5.5h8a.5.5 0 0 0 .5-.5v-9a.5.5 0 0 0-.5-.5h-8a.5.5 0 0 0-.5.5v2a.5.5 0 0 1-1 0v-2A1.5 1.5 0 0 1 6.5 2h8A1.5 1.5 0 0 1 16 3.5v9a1.5 1.5 0 0 1-1.5 1.5h-8A1.5 1.5 0 0 1 5 12.5v-2a.5.5 0 0 1 1 0z"/>
-                <path fill-rule="evenodd" d="M.146 8.354a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L1.707 7.5H10.5a.5.5 0 0 1 0 1H1.707l2.147 2.146a.5.5 0 0 1-.708.708z"/>
-            </svg>
-            Log Out
-        </button>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen">
+
+    <div class="w-full max-w-md mx-auto bg-white shadow-lg rounded-2xl overflow-hidden">
+
+        <!-- ===== Login Page ===== -->
+        <div id="login-page" class="p-8">
+            <div class="flex flex-col items-center text-center">
+                <div class="w-32 h-32 bg-blue-500 rounded-full flex items-center justify-center mb-8">
+                     <svg class="w-20 h-20 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                </div>
+                <div class="w-full">
+                    <div class="mb-4 text-left">
+                        <label for="mobile-number" class="text-sm font-medium text-gray-600">Mobile Number</label>
+                        <input id="mobile-number" type="tel" placeholder="Enter your number" class="mt-2 w-full px-4 py-3 bg-gray-100 rounded-xl border-transparent focus:border-blue-500 focus:ring-0">
+                    </div>
+                    <div class="mb-6 text-left">
+                        <label for="login-pin" class="text-sm font-medium text-gray-600">4 Digit Pin</label>
+                        <input id="login-pin" type="password" maxlength="4" placeholder="Enter 4 Digit Pin" class="mt-2 w-full px-4 py-3 bg-gray-100 rounded-xl border-transparent focus:border-blue-500 focus:ring-0">
+                    </div>
+                    <button id="login-btn" class="w-full bg-blue-600 text-white font-semibold py-3 rounded-xl hover:bg-blue-700 transition-colors">
+                        Login
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== Main App Page (Initially Hidden) ===== -->
+        <div id="main-app" class="hidden">
+            <!-- Header Section -->
+            <header class="bg-white p-4 flex justify-between items-center border-b">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center">
+                         <svg class="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    </div>
+                    <div>
+                        <p class="font-bold text-xl">$<span id="available-balance">45000</span></p>
+                        <p class="text-xs text-gray-500">Available Balance</p>
+                    </div>
+                </div>
+                <button id="logout-btn" class="flex items-center gap-2 px-3 py-2 border rounded-lg text-sm text-gray-600 hover:bg-gray-100">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg>
+                    Log Out
+                </button>
+            </header>
+
+            <main class="p-4 bg-gray-50">
+                <!-- Welcome Banner -->
+                <div class="bg-white p-4 border border-blue-200 border-dashed rounded-xl mb-4">
+                    <h2 class="font-bold text-lg mb-1">🔥 Welcome to Payooo!</h2>
+                    <p class="text-sm text-gray-600">Enjoy easy and convenient financial services with us. Cashout charge is low and secure.</p>
+                </div>
+
+                <!-- Action Grid -->
+                <div class="grid grid-cols-3 gap-3 text-center text-xs font-medium text-gray-700 mb-4">
+                    <button data-target="add-money" class="nav-btn p-3 bg-white border-2 border-transparent rounded-xl hover:border-blue-500">
+                        <img src="https://i.ibb.co/c2L1hD1/wallet1.png" alt="Add Money" class="w-8 h-8 mx-auto mb-2">
+                        Add Money
+                    </button>
+                    <button data-target="cash-out" class="nav-btn p-3 bg-white border-2 border-transparent rounded-xl hover:border-blue-500">
+                        <img src="https://i.ibb.co/hZ6WcCF/send1.png" alt="Cashout" class="w-8 h-8 mx-auto mb-2">
+                        Cashout
+                    </button>
+                    <button data-target="transfer-money" class="nav-btn p-3 bg-white border-2 border-transparent rounded-xl hover:border-blue-500">
+                        <img src="https://i.ibb.co/z5pCxv3/money1.png" alt="Transfer" class="w-8 h-8 mx-auto mb-2">
+                        Transfer Money
+                    </button>
+                    <button data-target="get-bonus" class="nav-btn p-3 bg-white border-2 border-transparent rounded-xl hover:border-blue-500">
+                        <img src="https://i.ibb.co/b3R7pY7/bonus1.png" alt="Bonus" class="w-8 h-8 mx-auto mb-2">
+                        Get Bonus
+                    </button>
+                    <button data-target="pay-bill" class="nav-btn p-3 bg-white border-2 border-transparent rounded-xl hover:border-blue-500">
+                        <img src="https://i.ibb.co/F82d287/purse1.png" alt="Pay Bill" class="w-8 h-8 mx-auto mb-2">
+                        Pay Bill
+                    </button>
+                     <button data-target="transactions" class="nav-btn p-3 bg-white border-2 border-blue-500 rounded-xl">
+                        <img src="https://i.ibb.co/hLg2v1X/transaction1.png" alt="Transactions" class="w-8 h-8 mx-auto mb-2">
+                        Transactions
+                    </button>
+                </div>
+
+                <!-- Dynamic Content Sections -->
+                <div id="dynamic-content">
+                    
+                    <!-- Transaction History (Default View) -->
+                    <div id="transactions" class="form-section">
+                        <div class="flex justify-between items-center mb-3">
+                            <h3 class="font-bold text-lg">Latest Payment</h3>
+                            <a href="#" class="text-sm text-blue-600 font-medium">View All</a>
+                        </div>
+                        <div id="transaction-list" class="space-y-2">
+                            <!-- Transactions will be added here by JS -->
+                        </div>
+                    </div>
+
+                    <!-- Add Money Form -->
+                    <div id="add-money" class="form-section hidden">
+                        <h3 class="font-bold text-lg mb-3">Add Money</h3>
+                        <div class="bg-white p-4 rounded-xl">
+                            <form id="add-money-form" class="space-y-4">
+                                <div>
+                                    <label class="text-sm font-medium text-gray-600">Select A Bank</label>
+                                    <input type="text" placeholder="Select back" list="banks" class="mt-1 w-full px-4 py-3 bg-gray-100 rounded-xl border-transparent focus:border-blue-500 focus:ring-0">
+                                     <datalist id="banks">
+                                        <option value="AB Bank"></option>
+                                        <option value="Sonali Bank"></option>
+                                        <option value="Pubali Bank"></option>
+                                        <option value="Islami Bank"></option>
+                                    </datalist>
+                                </div>
+                                <div>
+                                    <label class="text-sm font-medium text-gray-600">Bank Account Number</label>
+                                    <input type="text" placeholder="Enter 11 digit account number" class="mt-1 w-full px-4 py-3 bg-gray-100 rounded-xl border-transparent focus:border-blue-500 focus:ring-0">
+                                </div>
+                                <div>
+                                    <label class="text-sm font-medium text-gray-600">Amount to Add</label>
+                                    <input id="add-amount" type="number" placeholder="Add Amount to withdraw" class="mt-1 w-full px-4 py-3 bg-gray-100 rounded-xl border-transparent focus:border-blue-500 focus:ring-0">
+                                </div>
+                                <div>
+                                    <label class="text-sm font-medium text-gray-600">Pin Number</label>
+                                    <input type="password" maxlength="4" placeholder="Enter 4 digit pin number" class="mt-1 w-full px-4 py-3 bg-gray-100 rounded-xl border-transparent focus:border-blue-500 focus:ring-0">
+                                </div>
+                                <button type="submit" class="w-full bg-blue-600 text-white font-semibold py-3 rounded-xl hover:bg-blue-700 transition-colors">Add Money</button>
+                            </form>
+                        </div>
+                    </div>
+
+                     <!-- Cash Out Form -->
+                    <div id="cash-out" class="form-section hidden">
+                        <h3 class="font-bold text-lg mb-3">Cash Out</h3>
+                        <div class="bg-white p-4 rounded-xl">
+                            <form id="cash-out-form" class="space-y-4">
+                               <div>
+                                    <label class="text-sm font-medium text-gray-600">Agent Number</label>
+                                    <input type="text" placeholder="Enter 11 digit number" class="mt-1 w-full px-4 py-3 bg-gray-100 rounded-xl border-transparent focus:border-blue-500 focus:ring-0">
+                                </div>
+                                <div>
+                                    <label class="text-sm font-medium text-gray-600">Amount</label>
+                                    <input id="cashout-amount" type="number" placeholder="Enter amount to withdraw" class="mt-1 w-full px-4 py-3 bg-gray-100 rounded-xl border-transparent focus:border-blue-500 focus:ring-0">
+                                </div>
+                                <div>
+                                    <label class="text-sm font-medium text-gray-600">Pin Number</label>
+                                    <input type="password" maxlength="4" placeholder="Enter 4 digit pin number" class="mt-1 w-full px-4 py-3 bg-gray-100 rounded-xl border-transparent focus:border-blue-500 focus:ring-0">
+                                </div>
+                                <button type="submit" class="w-full bg-blue-600 text-white font-semibold py-3 rounded-xl hover:bg-blue-700 transition-colors">Withdraw Money</button>
+                            </form>
+                        </div>
+                    </div>
+
+                    <!-- Other forms would follow the same pattern... -->
+                    <div id="transfer-money" class="form-section hidden">
+                         <h3 class="font-bold text-lg mb-3">Transfer Money</h3>
+                        <div class="bg-white p-4 rounded-xl">
+                           <p class="text-center text-gray-500">Transfer Money form here.</p>
+                        </div>
+                    </div>
+                    <div id="get-bonus" class="form-section hidden">
+                         <h3 class="font-bold text-lg mb-3">Get Bonus</h3>
+                        <div class="bg-white p-4 rounded-xl">
+                           <p class="text-center text-gray-500">Get Bonus form here.</p>
+                        </div>
+                    </div>
+                    <div id="pay-bill" class="form-section hidden">
+                         <h3 class="font-bold text-lg mb-3">Pay Bill</h3>
+                        <div class="bg-white p-4 rounded-xl">
+                           <p class="text-center text-gray-500">Pay Bill form here.</p>
+                        </div>
+                    </div>
+
+                </div>
+            </main>
+        </div>
     </div>
 
-   
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    // Page elements
+    const loginPage = document.getElementById('login-page');
+    const mainApp = document.getElementById('main-app');
+    const loginBtn = document.getElementById('login-btn');
+    const logoutBtn = document.getElementById('logout-btn');
+
+    // Navigation buttons and content sections
+    const navButtons = document.querySelectorAll('.nav-btn');
+    const contentSections = document.querySelectorAll('.form-section');
+    const activeBtnClasses = ['border-blue-500', 'border-2'];
+    const inactiveBtnClasses = ['border-transparent'];
+
+    // Balance and transaction elements
+    const balanceEl = document.getElementById('available-balance');
+    const transactionListEl = document.getElementById('transaction-list');
+
+    // Forms
+    const addMoneyForm = document.getElementById('add-money-form');
+    const cashOutForm = document.getElementById('cash-out-form');
+
+    // Initial state
+    let transactions = [
+        { type: 'Electricity Bill', time: 'Today 01:44 AM', amount: 50, incoming: false },
+        { type: 'Bank Deposit', time: 'Today 01:44 AM', amount: 2000, incoming: true },
+        { type: 'Mobile Recharge', time: 'Today 01:44 AM', amount: 15, incoming: false },
+        { type: 'Gas Bill', time: 'Today 01:44 AM', amount: 35, incoming: false },
+    ];
     
+    // --- FUNCTIONS ---
+
+    // Function to update the displayed balance
+    const updateBalance = () => {
+        balanceEl.textContent = parseFloat(balanceEl.textContent).toFixed(2);
+    };
+
+    // Function to render transactions
+    const renderTransactions = () => {
+        transactionListEl.innerHTML = ''; // Clear list before rendering
+        transactions.forEach(t => {
+            const transactionItem = `
+                <div class="bg-white p-3 rounded-xl flex items-center justify-between">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 bg-orange-100 rounded-full flex items-center justify-center">
+                            <svg class="w-5 h-5 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"></path></svg>
+                        </div>
+                        <div>
+                            <p class="font-semibold text-sm">${t.type}</p>
+                            <p class="text-xs text-gray-500">${t.time}</p>
+                        </div>
+                    </div>
+                    <div class="text-right">
+                         <p class="font-semibold text-sm ${t.incoming ? 'text-green-500' : 'text-red-500'}">
+                            ${t.incoming ? '+' : '-'}$${t.amount.toFixed(2)}
+                        </p>
+                    </div>
+                </div>`;
+            transactionListEl.insertAdjacentHTML('beforeend', transactionItem);
+        });
+    };
+
+    // Function to switch between content sections (forms, transaction list)
+    const switchView = (targetId) => {
+        // Hide all sections
+        contentSections.forEach(section => section.classList.add('hidden'));
+        
+        // Show the target section
+        const targetSection = document.getElementById(targetId);
+        if (targetSection) {
+            targetSection.classList.remove('hidden');
+        }
+
+        // Update button styles
+        navButtons.forEach(btn => {
+            if (btn.dataset.target === targetId) {
+                btn.classList.add(...activeBtnClasses);
+                btn.classList.remove(...inactiveBtnClasses);
+            } else {
+                btn.classList.remove(...activeBtnClasses);
+                btn.classList.add(...inactiveBtnClasses);
+            }
+        });
+    };
+    
+    // --- EVENT LISTENERS ---
+
+    // Login
+    loginBtn.addEventListener('click', () => {
+        // Basic validation
+        if (document.getElementById('mobile-number').value && document.getElementById('login-pin').value) {
+            loginPage.classList.add('hidden');
+            mainApp.classList.remove('hidden');
+            renderTransactions(); // Render initial transactions on login
+            updateBalance();
+        } else {
+            alert('Please enter Mobile Number and PIN.');
+        }
+    });
+
+    // Logout
+    logoutBtn.addEventListener('click', () => {
+        mainApp.classList.add('hidden');
+        loginPage.classList.remove('hidden');
+        // Clear session data if any
+        document.getElementById('mobile-number').value = '';
+        document.getElementById('login-pin').value = '';
+    });
+
+    // Navigation button clicks
+    navButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            const target = button.dataset.target;
+            switchView(target);
+        });
+    });
+
+    // Add Money form submission
+    addMoneyForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const amount = parseFloat(document.getElementById('add-amount').value);
+        if (!isNaN(amount) && amount > 0) {
+            let currentBalance = parseFloat(balanceEl.textContent);
+            balanceEl.textContent = (currentBalance + amount).toFixed(2);
+            alert(`$${amount.toFixed(2)} added successfully!`);
+            addMoneyForm.reset();
+            switchView('transactions'); // Go back to transactions view
+        } else {
+            alert('Please enter a valid amount.');
+        }
+    });
+
+    // Cash Out form submission
+    cashOutForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const amount = parseFloat(document.getElementById('cashout-amount').value);
+        let currentBalance = parseFloat(balanceEl.textContent);
+        if (isNaN(amount) || amount <= 0) {
+            alert('Please enter a valid amount.');
+            return;
+        }
+        if (amount > currentBalance) {
+            alert('Insufficient balance.');
+            return;
+        }
+        balanceEl.textContent = (currentBalance - amount).toFixed(2);
+        alert(`$${amount.toFixed(2)} withdrawn successfully!`);
+        cashOutForm.reset();
+        switchView('transactions');
+    });
+
+    // --- INITIALIZATION ---
+    // Set the default view to 'transactions' when the app loads
+    switchView('transactions');
+});
+</script>
+
 </body>
 </html>
