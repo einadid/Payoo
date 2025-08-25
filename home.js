@@ -3,7 +3,6 @@ const validPin = 1234
 // ---------------- ADD MONEY ----------------- 
 
 document.getElementById('add-money-btn').addEventListener('click', function(e){
-            // Prevent the form from submitting and reloading the page
             e.preventDefault();
 
             const bank = document.getElementById("bank").value
@@ -17,7 +16,7 @@ document.getElementById('add-money-btn').addEventListener('click', function(e){
             const availableBalance = parseInt(document.getElementById('available-balance').innerText)
 
             if (accountNumber.length === 11) {
-                // alert("Valid Account Number ");
+                alert("Valid Account Number ");
                 } else {
                     alert("Invalid Account Number (must be 11 digits)");
                     return;
@@ -49,19 +48,16 @@ document.getElementById('withdraw-money-btn').addEventListener('click', function
 
     const availableBalance = parseInt(document.getElementById('available-balance').innerText);
 
-    // validate agent number
     if (agentNumber.length !== 11) {
         alert("Invalid Agent Number (must be 11 digits)");
         return;
     }
 
-    // validate pin
     if (pin !== validPin) {
         alert("Please enter a valid pin number");
         return;
     }
 
-    // check sufficient balance
     if (amount > availableBalance) {
         alert("Insufficient Balance!");
         return;
@@ -85,25 +81,21 @@ document.getElementById('transfer-btn').addEventListener('click', function(e) {
 
     const availableBalance = parseInt(document.getElementById('available-balance').innerText);
 
-    // validate account number
     if (accountNumber.length !== 11) {
         alert("Invalid Account Number (must be 11 digits)");
         return;
     }
 
-    // validate pin
     if (pin !== validPin) {
         alert("Please enter a valid pin number");
         return;
     }
 
-    // check sufficient balance
     if (amount > availableBalance) {
         alert("Insufficient Balance!");
         return;
     }
 
-    // update balance
     const totalAvailableBalance = availableBalance - amount;
     document.getElementById('available-balance').innerText = totalAvailableBalance;
 
@@ -143,25 +135,21 @@ document.getElementById('paybill-btn').addEventListener('click', function(e) {
 
     const availableBalance = parseInt(document.getElementById('available-balance').innerText);
 
-    // validate account number
     if(accountNumber.length !== 11) {
         alert("Invalid Account Number (must be 11 digits)");
         return;
     }
 
-    // validate pin
     if(pin !== validPin) {
         alert("Please enter a valid pin number");
         return;
     }
 
-    // check sufficient balance
     if(amount > availableBalance) {
         alert("Insufficient Balance!");
         return;
     }
 
-    // update balance
     const totalAvailableBalance = availableBalance - amount;
     document.getElementById('available-balance').innerText = totalAvailableBalance;
 
@@ -175,7 +163,6 @@ document.getElementById('paybill-btn').addEventListener('click', function(e) {
 
 // ---------------- toggle feature  -----------------
 
-// Add Money Card Click
 document.getElementById('add-card-btn').addEventListener('click', function() {
     document.getElementById('add-money-parent').style.display = "block"; 
     document.getElementById('cash-out-parent').style.display = "none";  
@@ -185,7 +172,6 @@ document.getElementById('add-card-btn').addEventListener('click', function() {
 
 });
 
-// Cashout Card Click
 document.getElementById('cash-card-btn').addEventListener('click', function() {
     document.getElementById('add-money-parent').style.display = "none";
     document.getElementById('cash-out-parent').style.display = "block";
@@ -221,13 +207,11 @@ document.getElementById('paybill-card-btn').addEventListener('click', function()
 
 
 
-// ---------------- log Out  -----------------
+// ---------------- log Out feature  -----------------
 
 document.getElementById('logout-btn').addEventListener('click', function() {
-    // যদি তুমি session/local storage use করো, clear করে দাও
     localStorage.clear();
     sessionStorage.clear();
 
-    // Redirect to index.html
     window.location.href = "index.html";
 });
