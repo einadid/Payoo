@@ -218,3 +218,16 @@ document.getElementById('paybill-card-btn').addEventListener('click', function()
     document.getElementById('bonus-parent').style.display = "none";
     document.getElementById('paybill-parent').style.display = "block";
 });
+
+
+
+// ---------------- log Out  -----------------
+
+document.getElementById('logout-btn').addEventListener('click', function() {
+    // যদি তুমি session/local storage use করো, clear করে দাও
+    localStorage.clear();
+    sessionStorage.clear();
+
+    // Redirect to index.html
+    window.location.href = "index.html";
+});
